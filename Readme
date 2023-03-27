@@ -1,0 +1,32 @@
+README
+Le fichier « server.c » contient le code d’un serveur de contrôle qui met en oeuvre le protocole de communication
+pour interagir avec différents types d'appareils en utilisant le protocole UDP sur IPv6. 
+
+Ce serveur écoute sur le port 5678 et envoie des messages de données à tous les appareils connectés sur le réseau.
+Pour démarrer le serveur, il suffit de compiler le code en utilisant un compilateur C compatible avec Contiki OS et de le flasher sur le microcontrôleur. 
+Le serveur démarrera automatiquement au démarrage du microcontrôleur.
+Pour envoyer des données à partir du serveur, le serveur envoie périodiquement des messages de données à tous les appareils connectés sur le réseau.
+Pour modifier la fréquence d'envoi des messages de données, il suffit de modifier le code en modifiant la durée du timer.
+Pour recevoir des données, le serveur doit être connecté au réseau et à l'écoute sur le port 5678. 
+Lorsqu'un message de commande est reçu sur ce port, le serveur traite la commande et renvoie la réponse correspondante.
+Types d'appareils pris en charge
+Ce serveur peut interagir avec différents types d'appareils qui implémentent le même protocole de communication. Les messages sont de deux types :
+• Message de données : qui permet d'envoyer des données aux appareils connectés sur le réseau.
+• Message de commande : qui permet de recevoir des commandes à partir des appareils connectés sur le réseau.
+Interface utilisateur
+L'interface utilisateur du serveur n'est pas implémentée dans ce code. 
+Cependant, le serveur affiche des messages sur la console série pour indiquer l'état du serveur et pour afficher les commandes reçues.
+Les utilisateurs peuvent également envoyer des commandes en utilisant un client UDP sur le port 5678.
+Le fichier « device_sender.c » contient le code qui enverra des datagrammes UDP contenant des données au serveur local toutes les secondes.
+Vous pouvez modifier les données envoyées en modifiant la structure de datagramme dans la boucle principale du code.
+Le fichier « device_receiver.c » contient le code qui implémente un processus de réception UDP.
+Le code écoute sur les ports UDP_CLIENT_PORT (8765) et UDP_SERVER_PORT (5678) et attend la réception d'un datagramme. 
+Lorsqu'un datagramme est reçu, le code vérifie s'il est destiné à cet appareil et s'il s'agit d'une commande. Si c'est le cas, il traite la commande.
+Le datagramme est défini comme une structure avec un ID, un type, une longueur de données et un tableau de données. 
+La longueur maximale des données est définie par MAX_PAYLOAD_LEN, qui est défini comme 123 (127 - 2 (ID du message) - 1 (type du message) - 2 (taille des données)).
+Le code utilise la bibliothèque Contiki pour ouvrir une connexion UDP, lier la connexion aux ports spécifiés et attendre la réception
+d'un datagramme à l'aide de la fonction PROCESS_WAIT_EVENT_UNTIL.
+Ce code peut être utilisé pour recevoir des commandes envoyées par des appareils distants sur le réseau.
+La fonction de traitement de la commande peut être modifiée pour répondre aux besoins spécifiques de l'application.
+Le fichier « device_sender_receiver.c » contient le code d'envoi de données à un serveur distant via une connexion UDP et de réception de la réponse.
+Les données envoyées sont constituées d'un identifiant unique, d'un type de message et de données. Le serveur peut envoyer en réponse une commande.
